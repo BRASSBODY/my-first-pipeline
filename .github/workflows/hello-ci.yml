@@ -13,7 +13,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run a simulated test step
-        run: echo "Running automated tests... All tests passed!"
+        - name: Run a simulated test step
+        run: exit 1
 
       - name: Run a simulated deployment step
         run: echo "Deploying application to production server..."
