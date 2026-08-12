@@ -1,0 +1,19 @@
+name: First CI Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Run a simulated test step
+        run: echo "Running automated tests... All tests passed!"
+
+      - name: Run a simulated deployment step
+        run: echo "Deploying application to production server..."
