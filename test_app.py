@@ -138,7 +138,7 @@ def test_format_user_role_standard():
 def test_user_manager_invalid_id(manager: UserManager):
     with pytest.raises(ValueError, match="User ID must be a positive integer"):
         manager.add_user(-1, "Test", "user")
-        
+
 
 def test_fetch_database_credentials_missing(monkeypatch):
     monkeypatch.delenv("DB_USER", raising=False)
