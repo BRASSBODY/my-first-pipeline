@@ -127,8 +127,9 @@ def validate_config_key(key_name: str) -> bool:
         return len(self._users)
 
 
-    class UserManager:
-        
+class UserManager:
+    """Manages user profiles and access roles in memory."""
+
     def __init__(self, system_name: str) -> None:
         self.system_name = system_name
         self._users: Dict[int, Dict[str, Any]] = {}
@@ -159,4 +160,4 @@ def validate_config_key(key_name: str) -> bool:
         return self._users[user_id]
 
     def get_total_users(self) -> int:
-        return len(self._users)
+        return len(self._users)    
