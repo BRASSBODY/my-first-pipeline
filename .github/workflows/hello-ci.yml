@@ -5,7 +5,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-  # Job 1: Linting and Testing
   build-and-test:
     runs-on: ubuntu-latest
 
@@ -18,31 +17,25 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install dependencies from requirements.txt
         run: |
           python -m pip install --upgrade pip
-          pip install pytest flake8
+          # Install directly from our locked requirements file
+          pip install -r requirements.txt
 
-      - name: Run flake8 code linter
-        run: |
-          # Stop build if there are Python syntax errors or undefined names
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          # Exit-zero treats all warnings as non-fatal
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+      - name: Run linter
+        run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
-      - name: Run pytest unit tests
+      - name: Run pytest suite
+        # Set an environment variable directly inside the CI step for testing
+        env:
+          APP_ENV: "ci_test_runner"
         run: pytest
 
-  # Job 2: Simulated Continuous Deployment
   deploy:
-    needs: build-and-test  # Enforces that deploy only runs if build-and-test passes
+    needs: build-and-test
     runs-on: ubuntu-latest
 
     steps:
       - name: Simulate Production Deployment
-        env:
-          # Reads secret securely from repository settings
-          DEPLOY_ENV: "production"
-        run: |
-          echo "Connecting to $DEPLOY_ENV environment..."
-          echo "Build passed all quality gates and tests. Deployment complete!"
+        run: echo "Deployment complete using locked dependencies!"a
