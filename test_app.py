@@ -128,3 +128,20 @@ def test_fetch_database_credentials_success(monkeypatch):
     assert creds["user"] == "admin_user"
     assert creds["password"] == "super_secret_123"
     assert creds["connection_status"] == "READY"
+
+
+def test_format_user_role_standard():
+    # Covers fallback role logic
+    assert format_user_role("user") == "ACCESS_LEVEL_STANDARD"
+
+
+def test_user_manager_invalid_id(manager: UserManager):
+    with pytest.raises(ValueError, match="User ID must be a positive integer"):
+        manager.add_user(-1, "Test", "user")
+        
+
+def test_fetch_database_credentials_missing(monkeypatch):
+    monkeypatch.delenv("DB_USER", raising=False)
+    monkeypatch.delenv("DB_PASSWORD", raising=False)
+    with pytest.raises(ValueError, match="Database credentials missing"):
+        fetch_database_credentials()
