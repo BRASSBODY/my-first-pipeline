@@ -80,7 +80,7 @@ def validate_config_key(key_name: str) -> bool:
     return True
 
     class UserManager:
-    """Manages user profiles and access roles in memory."""
+        """Manages user profiles and access roles in memory."""
 
     def __init__(self, system_name: str) -> None:
         # Store the system name as an instance attribute
