@@ -20,14 +20,12 @@ jobs:
       - name: Install dependencies from requirements.txt
         run: |
           python -m pip install --upgrade pip
-          # Install directly from our locked requirements file
           pip install -r requirements.txt
 
       - name: Run linter
         run: flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
 
       - name: Run pytest suite
-        # Set an environment variable directly inside the CI step for testing
         env:
           APP_ENV: "ci_test_runner"
         run: pytest
@@ -38,4 +36,4 @@ jobs:
 
     steps:
       - name: Simulate Production Deployment
-        run: echo "Deployment complete using locked dependencies!"a
+        run: echo "Deployment complete using locked dependencies!"
