@@ -125,3 +125,39 @@ def validate_config_key(key_name: str) -> bool:
     def get_total_users(self) -> int:
         # Return total count of users currently stored
         return len(self._users)
+
+
+    class UserManager:
+    """Manages user profiles and access roles in memory."""
+
+    def __init__(self, system_name: str) -> None:
+        self.system_name = system_name
+        self._users: Dict[int, Dict[str, Any]] = {}
+
+    def add_user(self, user_id: int, name: str, role: str) -> Dict[str, Any]:
+        if user_id <= 0:
+            raise ValueError("User ID must be a positive integer.")
+
+        if user_id in self._users:
+            raise KeyError(f"User ID {user_id} already exists in {self.system_name}.")
+
+        access_level = format_user_role(role)
+
+        user_record = {
+            "id": user_id,
+            "name": name,
+            "role": role,
+            "access_level": access_level
+        }
+
+        self._users[user_id] = user_record
+        return user_record
+
+    def get_user(self, user_id: int) -> Dict[str, Any]:
+        if user_id not in self._users:
+            raise KeyError(f"User ID {user_id} not found.")
+
+        return self._users[user_id]
+
+    def get_total_users(self) -> int:
+        return len(self._users)
