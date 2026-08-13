@@ -45,8 +45,14 @@ def test_save_user_record_invalid_id(tmp_path: Path):
     with pytest.raises(ValueError, match="User ID must be a positive integer"):
         save_user_record(str(test_file), -5, {"name": "Test"})
 
-def test_get_system_status_default():
+def test_get_system_status_default(monkeypatch):
+    # Safely remove APP_ENV if set by CI runner to test default fallback behavior
+    monkeypatch.delenv("APP_ENV", raising=False)
+    
+    # Execute status call
     status = get_system_status()
+    
+    # Now it cleanly falls back to 'development'
     assert status["environment"] == "development"
     assert status["status"] == "OPERATIONAL"
 
