@@ -3,6 +3,8 @@ name: Python App CI & CD
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 jobs:
   build-and-test:
@@ -37,8 +39,26 @@ jobs:
           APP_ENV: "ci_test_runner"
         run: pytest --cov=app --cov-report=term-missing --cov-fail-under=85
 
-  deploy:
+  docker-build:
     needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: my-python-app:latest
+
+  deploy:
+    needs: [build-and-test, docker-build]
     runs-on: ubuntu-latest
 
     steps:
@@ -51,5 +71,5 @@ jobs:
           DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         run: |
           echo "Connecting securely with user: $DB_USER"
-          echo "Deploying application with authenticated database channel..."
+          echo "Deploying application container with authenticated database channel..."
           echo "Deployment successful!"
