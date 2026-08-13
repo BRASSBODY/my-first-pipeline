@@ -1,3 +1,13 @@
+from app import (
+    calculate_average,
+    format_user_role,
+    save_user_record,
+    read_user_record,
+    get_system_status,
+    validate_config_key,
+    UserManager  # Added class import
+)
+
 # Import pytest to handle assertions and fixtures
 import pytest
 # Import os to manipulate test environment variables
@@ -68,3 +78,4 @@ def test_validate_config_key_missing():
 def test_validate_config_key_present(monkeypatch):
     monkeypatch.setenv("MOCK_API_KEY", "secret_12345")
     assert validate_config_key("MOCK_API_KEY") is True
+

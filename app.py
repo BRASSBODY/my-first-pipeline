@@ -78,3 +78,50 @@ def validate_config_key(key_name: str) -> bool:
         raise KeyError(f"Missing required environment variable: {key_name}")
         
     return True
+
+    class UserManager:
+    """Manages user profiles and access roles in memory."""
+
+    def __init__(self, system_name: str) -> None:
+        # Store the system name as an instance attribute
+        self.system_name = system_name
+        # Private-like attribute storing user records (dictionary mapping user_id to user details)
+        self._users: Dict[int, Dict[str, Any]] = {}
+
+    def add_user(self, user_id: int, name: str, role: str) -> Dict[str, Any]:
+        # Validate that the user ID is a positive integer
+        if user_id <= 0:
+            raise ValueError("User ID must be a positive integer.")
+
+        # Check if the user ID already exists in our dictionary
+        if user_id in self._users:
+            raise KeyError(f"User ID {user_id} already exists in {self.system_name}.")
+
+        # Format and validate the role using our existing format_user_role function
+        access_level = format_user_role(role)
+
+        # Construct the user profile record
+        user_record = {
+            "id": user_id,
+            "name": name,
+            "role": role,
+            "access_level": access_level
+        }
+
+        # Store the record in our internal dictionary
+        self._users[user_id] = user_record
+
+        # Return the created user record
+        return user_record
+
+    def get_user(self, user_id: int) -> Dict[str, Any]:
+        # Check if the user exists; if not, raise a KeyError
+        if user_id not in self._users:
+            raise KeyError(f"User ID {user_id} not found.")
+
+        # Return the requested user record dictionary
+        return self._users[user_id]
+
+    def get_total_users(self) -> int:
+        # Return total count of users currently stored
+        return len(self._users)
